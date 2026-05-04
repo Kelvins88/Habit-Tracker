@@ -3,20 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/habit_navigation"
-    app:startDestination="@id/addHabitFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/addHabitFragment"
-        android:name="com.example.habittracker.view.AddHabitFragment"
-        android:label="fragment_add_habit"
-        tools:layout="@layout/fragment_add_habit" />
+        android:id="@+id/loginFragment"
+        android:name="com.example.habittracker.view.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_habitListFragment"
+            app:destination="@id/habitListFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
     <fragment
         android:id="@+id/habitListFragment"
         android:name="com.example.habittracker.view.HabitListFragment"
-        android:label="fragment_habit_list"
-        tools:layout="@layout/fragment_habit_list" >
+        android:label="Habit Tracker"
+        tools:layout="@layout/fragment_habit_list">
         <action
             android:id="@+id/action_habitListFragment_to_addHabitFragment"
             app:destination="@id/addHabitFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/addHabitFragment"
+        android:name="com.example.habittracker.view.AddHabitFragment"
+        android:label="Create New Habit"
+        tools:layout="@layout/fragment_add_habit" />
+
 </navigation>
