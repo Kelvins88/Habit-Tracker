@@ -40,11 +40,18 @@ class AddHabitFragment : Fragment() {
             val selectedIcon = binding.txtAddIcon.text.toString()
 
             if (title.isNotEmpty() && desc.isNotEmpty() && goalStr.isNotEmpty() && unit.isNotEmpty() && selectedIcon.isNotEmpty()) {
+                val goal = goalStr.toInt()
+
+                if (goal <= 0) {
+                    Toast.makeText(context, "Goal must be greater than 0", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
                 val newHabit = Habit(
                     id = UUID.randomUUID().toString(),
                     title = title,
                     description = desc,
-                    goal = goalStr.toInt(),
+                    goal = goal,
                     unit = unit,
                     currentProgress = 0,
                     photoUrl = selectedIcon

@@ -36,7 +36,6 @@ class HabitListFragment : Fragment() {
 
         binding.refreshLayout.setOnRefreshListener {
             viewModel.refresh()
-            binding.refreshLayout.isRefreshing = false
         }
 
         observeViewModel()
@@ -52,6 +51,10 @@ class HabitListFragment : Fragment() {
         }
         viewModel.loadingLD.observe(viewLifecycleOwner) { isLoading ->
             binding.progressLoad.visibility = if (isLoading) View.VISIBLE else View.GONE
+
+            if (!isLoading) {
+                binding.refreshLayout.isRefreshing = false
+            }
         }
     }
 }

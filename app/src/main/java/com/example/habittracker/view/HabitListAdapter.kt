@@ -2,6 +2,7 @@ package com.example.habittracker.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habittracker.R
 import com.example.habittracker.databinding.HabitListItemBinding
@@ -18,6 +19,7 @@ class HabitListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
         val binding = HabitListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HabitViewHolder(binding)
+
     }
 
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
@@ -33,8 +35,13 @@ class HabitListAdapter(
 
             if (habit.currentProgress >= habit.goal) {
                 txtStatus.text = "Completed"
+                txtStatus.setBackgroundResource(R.drawable.bg_status_badge_green)
+                txtStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.status_completed_text))
+
             } else {
                 txtStatus.text = "In Progress"
+                txtStatus.setBackgroundResource(R.drawable.bg_status_badge)
+                txtStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.status_in_progress_text))
             }
 
             when (habit.photoUrl) {
