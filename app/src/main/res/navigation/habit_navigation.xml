@@ -31,6 +31,10 @@
         android:id="@+id/addHabitFragment"
         android:name="com.example.habittracker.view.AddHabitFragment"
         android:label="Create New Habit"
-        tools:layout="@layout/fragment_add_habit" />
+        tools:layout="@layout/fragment_add_habit" >
+        <action
+            android:id="@+id/action_addHabitFragment_to_habitListFragment"
+            app:destination="@id/habitListFragment" />
+    </fragment>
 
 </navigation>

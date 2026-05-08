@@ -19,9 +19,7 @@ class HabitListViewModel(application: Application) : AndroidViewModel(applicatio
     fun refresh() {
         loadingLD.value = true
         habitLoadErrorLD.value = false
-
         val habitList = readFromInternalStorage()
-
         habitsLD.value = habitList
         loadingLD.value = false
     }
@@ -29,24 +27,37 @@ class HabitListViewModel(application: Application) : AndroidViewModel(applicatio
     private fun readFromInternalStorage(): ArrayList<Habit> {
         val file = File(getApplication<Application>().filesDir, fileName)
         if (!file.exists()) return arrayListOf()
-
         return try {
             val jsonString = file.readText()
-            val sType = object : TypeToken<List<Habit>>() {}.type
-            Gson().fromJson<ArrayList<Habit>>(jsonString, sType) // Konversi JSON ke Object (Materi Week 4)
+            val sType = object : TypeToken<ArrayList<Habit>>() {}.type
+            Gson().fromJson<ArrayList<Habit>>(jsonString, sType)
         } catch (e: Exception) {
             arrayListOf()
+        }
+    }
+    fun updateProgress(habitId: String, delta: Int) {
+        val currentList = readFromInternalStorage()
+        val habit = currentList.find { it.id == habitId }
+
+        habit?.let {
+            it.currentProgress = (it.currentProgress + delta)
+                .coerceAtLeast(0)
+                .coerceAtMost(it.goal)
+
+            val jsonString = Gson().toJson(currentList)
+            val file = File(getApplication<Application>().filesDir, fileName)
+            file.writeText(jsonString)
+
+            refresh()
         }
     }
 
     fun addHabit(habit: Habit) {
         val currentList = readFromInternalStorage()
         currentList.add(habit)
-
         val jsonString = Gson().toJson(currentList)
         val file = File(getApplication<Application>().filesDir, fileName)
         file.writeText(jsonString)
-
         refresh()
     }
 }
