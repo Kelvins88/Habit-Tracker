@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_habitListFragment_to_addHabitFragment"
             app:destination="@id/addHabitFragment" />
+        <action
+            android:id="@+id/action_habitListFragment_to_editHabitFragment"
+            app:destination="@id/editHabitFragment" />
     </fragment>
 
     <fragment
@@ -37,4 +40,13 @@
             app:destination="@id/habitListFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/editHabitFragment"
+        android:name="com.example.habittracker.view.EditHabitFragment"
+        android:label="Edit Habit"
+        tools:layout="@layout/fragment_edit_habit">
+        <argument
+            android:name="habitId"
+            app:argType="string" />
+    </fragment>
 </navigation>

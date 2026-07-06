@@ -1,5 +1,6 @@
 package com.example.habittracker.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,13 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val sharedPref = requireActivity().getSharedPreferences("LoginSession", Context.MODE_PRIVATE)
+        val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
+        if (isLoggedIn) {
+            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_habitListFragment)
+            return
+        }
+
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
         binding.btnLogin.setOnClickListener {
@@ -37,8 +45,8 @@ class LoginFragment : Fragment() {
 
         viewModel.loginSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
-                Navigation.findNavController(requireView())
-                    .navigate(R.id.action_loginFragment_to_habitListFragment)
+                sharedPref.edit().putBoolean("isLoggedIn", true).apply()
+                Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_habitListFragment)
             } else {
                 Toast.makeText(context, "Invalid username or password", Toast.LENGTH_SHORT).show()
             }
