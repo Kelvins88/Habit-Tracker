@@ -12,12 +12,10 @@ import kotlinx.coroutines.withContext
 
 class HabitListViewModel(application: Application) : AndroidViewModel(application) {
     private val db = AppDatabase.getDatabase(application)
-
     val habitsLD = MutableLiveData<List<Habit>>()
     val loadingLD = MutableLiveData<Boolean>()
-
     fun refresh() {
-        loadingLD.value = true
+        loadingLD.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             val habitList = db.habitDao().getAllHabits()
             withContext(Dispatchers.Main) {

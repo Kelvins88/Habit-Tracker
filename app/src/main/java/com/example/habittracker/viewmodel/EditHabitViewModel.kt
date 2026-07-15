@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class EditHabitViewModel(application: Application) : AndroidViewModel(application) {
     private val db = AppDatabase.getDatabase(application)
-    val habitLD = MutableLiveData<Habit>()
+    val habitLD = MutableLiveData<Habit?>()
 
     fun fetch(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
