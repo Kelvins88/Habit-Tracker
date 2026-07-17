@@ -3,30 +3,36 @@ package com.example.habittracker.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.habittracker.database.AppDatabase
 import com.example.habittracker.model.Habit
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
-class HabitListViewModel(application: Application) : AndroidViewModel(application) {
+class HabitListViewModel(application: Application)
+    : AndroidViewModel(application), CoroutineScope {
+
     private val db = AppDatabase.getDatabase(application)
     val habitsLD = MutableLiveData<List<Habit>>()
     val loadingLD = MutableLiveData<Boolean>()
+
+    private var job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
+
     fun refresh() {
         loadingLD.postValue(true)
-        viewModelScope.launch(Dispatchers.IO) {
+        launch {
             val habitList = db.habitDao().getAllHabits()
-            withContext(Dispatchers.Main) {
-                habitsLD.value = habitList
-                loadingLD.value = false
-            }
+            habitsLD.postValue(habitList)
+            loadingLD.postValue(false)
         }
     }
 
     fun updateProgress(habitId: String, delta: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        launch {
             val habit = db.habitDao().getHabitById(habitId)
             if (habit != null) {
                 habit.currentProgress = (habit.currentProgress + delta)
@@ -40,7 +46,7 @@ class HabitListViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun addHabit(habit: Habit) {
-        viewModelScope.launch(Dispatchers.IO) {
+        launch {
             db.habitDao().insertHabit(habit)
             refresh()
         }

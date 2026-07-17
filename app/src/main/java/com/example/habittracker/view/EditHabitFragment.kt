@@ -38,11 +38,8 @@ class EditHabitFragment : Fragment(), EditHabitListener {
     override fun onSaveClick(v: View) {
         val updatedHabit = binding.habit
         if (updatedHabit != null) {
-            // Karena kita menggunakan Two-Way binding di title dan desc, nilainya sudah otomatis terupdate.
-            // Untuk Goal dan Unit, kita ambil manual dari EditText agar tidak crash di KAPT.
             val goalStr = binding.txtEditGoal.text.toString()
             updatedHabit.goal = goalStr.toIntOrNull() ?: updatedHabit.goal
-            updatedHabit.unit = binding.txtEditUnit.text.toString()
 
             viewModel.update(updatedHabit)
             Toast.makeText(context, "Habit Updated!", Toast.LENGTH_SHORT).show()
